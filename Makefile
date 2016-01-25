@@ -1,6 +1,8 @@
+CXX = clang
+
 bin/sol: src/main.cpp
-	@mkdir bin
-	$(CC) -Wall -Wextra -pedantic -O3 -std=c++14 -lstdc++ src/main.cpp -o bin/sol
+	@mkdir -p bin
+	$(CXX) -Wall -Wextra -pedantic -O3 -std=c++14 -lstdc++ src/main.cpp -Ilib/eigen -o bin/sol
 
 .PHONY: clean
 clean:
