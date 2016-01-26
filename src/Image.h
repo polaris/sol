@@ -9,6 +9,14 @@ class Image {
 public:
     Image(unsigned int width, unsigned int height);
 
+    Image(const Image&) = delete;
+
+    Image(const Image&&) = delete;
+
+    Image& operator =(const Image&) = delete;
+
+    Image& operator =(const Image&&) = delete;
+
     virtual ~Image();
 
     unsigned int getWidth() const;
