@@ -1,8 +1,22 @@
 CXX = clang
 
-bin/sol: src/main.cpp
+CXXFLAGS = -Wall -Wextra -pedantic -std=c++14 -O3 `libpng-config --cflags`
+LDFLAGS = -lstdc++ `libpng-config --ldflags`
+INC = -Ilib/eigen
+
+all: bin/sol
+
+bin/sol: obj/main.o obj/Image.o
 	@mkdir -p bin
-	$(CXX) -Wall -Wextra -pedantic -O3 -std=c++14 -lstdc++ src/main.cpp -Ilib/eigen -o bin/sol
+	$(CXX) $(LDFLAGS) $^ -o $@
+
+obj/main.o: src/main.cpp
+	@mkdir -p obj
+	$(CXX) $(CXXFLAGS) $(INC) $^ -c -o $@
+
+obj/Image.o: src/Image.cpp src/Image.h
+	@mkdir -p obj
+	$(CXX) $(CXXFLAGS) $(INC) $< -c -o $@
 
 .PHONY: clean
 clean:
