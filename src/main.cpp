@@ -1,9 +1,8 @@
-#include <Eigen/Core>
-
 #include "Image.h"
+#include "Ray.h"
 
 int main(int, char**) {
-    Eigen::Vector3f v1;
+    sol::Ray ray(Eigen::Vector3f(0, 0, 0), Eigen::Vector3f(1, 0, 0));
 
     sol::Image image(128, 128);
     for (unsigned int y = 0; y < image.getHeight(); ++y) {

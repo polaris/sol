@@ -4,9 +4,12 @@ CXXFLAGS = -Wall -Wextra -pedantic -std=c++14 -O3 `libpng-config --cflags`
 LDFLAGS = -lstdc++ `libpng-config --ldflags`
 INC = -Ilib/eigen
 
+SOURCE = $(wildcard src/*.cpp)
+OBJ = $(addprefix obj/,$(notdir $(SOURCE:.cpp=.o)))
+
 all: bin/sol
 
-bin/sol: obj/main.o obj/Image.o
+bin/sol: $(OBJ)
 	@mkdir -p bin
 	$(CXX) $(LDFLAGS) $^ -o $@
 
@@ -14,7 +17,7 @@ obj/main.o: src/main.cpp
 	@mkdir -p obj
 	$(CXX) $(CXXFLAGS) $(INC) $^ -c -o $@
 
-obj/Image.o: src/Image.cpp src/Image.h
+obj/%.o: src/%.cpp src/%.h
 	@mkdir -p obj
 	$(CXX) $(CXXFLAGS) $(INC) $< -c -o $@
 
