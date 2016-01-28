@@ -3,7 +3,19 @@
 
 #include <iostream>
 
+bool hitSphere(const Eigen::Vector3f &center, float radius, const sol::Ray &ray) {
+    Eigen::Vector3f oc = ray.getOrigin() - center;
+    const auto a = ray.getDirection().dot(ray.getDirection());
+    const auto b = 2.0 * oc.dot(ray.getDirection());
+    const auto c = oc.dot(oc) - radius * radius;
+    const auto discriminant = b * b - 4 * a * c;
+    return discriminant > 0;
+}
+
 Eigen::Vector3f color(const sol::Ray &ray) {
+    if (hitSphere(Eigen::Vector3f(0.0, 0.0, -1.0), 0.5, ray)) {
+        return Eigen::Vector3f(1.0, 0.0, 0.0);
+    }
     const auto unitDirection = ray.getDirection().normalized();
     const auto t = 0.5 * (unitDirection.y() + 1.0);
     return (1.0 - t) * Eigen::Vector3f(1.0, 1.0, 1.0) + t * Eigen::Vector3f(0.5, 0.7, 1.0);
