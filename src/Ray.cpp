@@ -12,4 +12,8 @@ Ray::Ray(const Ray &rhs)
 , direction(rhs.direction) {
 }
 
+Eigen::Vector3f Ray::pointAt(float t) const {
+    return origin + t * direction;
+}
+
 }

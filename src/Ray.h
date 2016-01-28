@@ -19,6 +19,8 @@ public:
         return direction;
     }
 
+    Eigen::Vector3f pointAt(float t) const;
+
 private:
     const Eigen::Vector3f origin;
     const Eigen::Vector3f direction;
