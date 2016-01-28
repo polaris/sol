@@ -1,7 +1,7 @@
 CXX := clang
 
 CXXFLAGS := -Wall -Wextra -pedantic -std=c++14 -O3 `libpng-config --cflags`
-LDFLAGS := -lstdc++ `libpng-config --ldflags`
+LDFLAGS := -pthread -lstdc++ `libpng-config --ldflags`
 INC := -Ilib/eigen
 
 SRC := $(wildcard src/*.cpp)
@@ -41,6 +41,7 @@ obj/gtest-all.o: ${GTEST_DIR}/src/gtest-all.cc
 obj/gmock-all.o: ${GMOCK_DIR}/src/gmock-all.cc
 	$(CXX) -isystem ${GTEST_DIR}/include -I${GTEST_DIR} -isystem ${GMOCK_DIR}/include -I${GMOCK_DIR} -pthread -c $^ -o $@
 bin/libgmock.a: obj/gtest-all.o obj/gmock-all.o
+	@mkdir -p bin
 	ar -rc $@ $^
 
 .PHONY: clean
