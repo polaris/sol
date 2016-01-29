@@ -1,6 +1,7 @@
 #include "Image.h"
 #include "Ray.h"
 #include "Sphere.h"
+#include "HitableList.h"
 
 #include <iostream>
 
@@ -28,7 +29,9 @@ int main(int, char**) {
     Eigen::Vector3f vertical(0.0, 2.0, 0.0);
     Eigen::Vector3f origin(0.0, 0.0, 0.0);
 
-    sol::Sphere sphere(Eigen::Vector3f(0, 0, -1), 0.5);
+    sol::HitableList hitableList;
+    hitableList.add(std::make_shared<sol::Sphere>(Eigen::Vector3f(0, 0, -1), 0.5));
+    hitableList.add(std::make_shared<sol::Sphere>(Eigen::Vector3f(0, -100.5, -1), 100));
 
     for (int j = 0; j < ny; j++) {
         for (int i = 0; i < nx; i++) {
@@ -36,7 +39,7 @@ int main(int, char**) {
             const auto v = float(j) / float(ny);
 
             const sol::Ray ray(origin, lowerLeftCorner + u * horizontal + v * vertical);
-            const auto col = color(ray, sphere);
+            const auto col = color(ray, hitableList);
 
             const auto r = int(255.99 * col[0]);
             const auto g = int(255.99 * col[1]);
