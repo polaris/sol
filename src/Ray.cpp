@@ -4,7 +4,7 @@ namespace sol {
 
 Ray::Ray(const Eigen::Vector3f &o, const Eigen::Vector3f &d)
 : origin(o)
-, direction(d) {
+, direction(d.normalized()) {
 }
 
 Ray::Ray(const Ray &rhs)
