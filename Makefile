@@ -1,7 +1,7 @@
 CXX := clang
 
 CXXFLAGS := -Wall -Wextra -pedantic -std=c++14 -O3 `libpng-config --cflags`
-LDFLAGS := -pthread -lstdc++ `libpng-config --ldflags`
+LDFLAGS := -pthread -lstdc++ -lm `libpng-config --ldflags`
 INC := -Ilib/eigen
 
 SRC := $(wildcard src/*.cpp)
