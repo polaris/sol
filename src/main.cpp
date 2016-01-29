@@ -2,8 +2,10 @@
 #include "Ray.h"
 #include "Sphere.h"
 #include "HitableList.h"
+#include "Camera.h"
 
 #include <iostream>
+#include <cstdlib>
 
 Eigen::Vector3f color(const sol::Ray &ray, sol::Hitable &hitable) {
     sol::HitRecord hitRecord;
@@ -16,18 +18,20 @@ Eigen::Vector3f color(const sol::Ray &ray, sol::Hitable &hitable) {
     }
 }
 
+float myRandom() {
+    return drand48();
+}
+
 int main(int, char**) {
     const int nx = 2000;
     const int ny = 1000;
+    const int ns = 100;
 
-    const auto aspectRatio = float(nx) / float(ny);
+    //const auto aspectRatio = float(nx) / float(ny);
 
     sol::Image image(nx, ny);
 
-    Eigen::Vector3f lowerLeftCorner(-1.0 * aspectRatio, -1.0, -1.0);
-    Eigen::Vector3f horizontal(2.0 * aspectRatio, 0.0, 0.0);
-    Eigen::Vector3f vertical(0.0, 2.0, 0.0);
-    Eigen::Vector3f origin(0.0, 0.0, 0.0);
+    sol::Camera camera;
 
     sol::HitableList hitableList;
     hitableList.add(std::make_shared<sol::Sphere>(Eigen::Vector3f(0, 0, -1), 0.5));
@@ -35,11 +39,16 @@ int main(int, char**) {
 
     for (int j = 0; j < ny; j++) {
         for (int i = 0; i < nx; i++) {
-            const auto u = float(i) / float(nx);
-            const auto v = float(j) / float(ny);
+            Eigen::Vector3f col(0, 0, 0);
 
-            const sol::Ray ray(origin, lowerLeftCorner + u * horizontal + v * vertical);
-            const auto col = color(ray, hitableList);
+            for (int s = 0; s < ns; s++) {
+                const auto u = float(i + myRandom()) / float(nx);
+                const auto v = float(j + myRandom()) / float(ny);
+                const auto ray = camera.getRay(u, v);
+                col += color(ray, hitableList);
+            }
+
+            col /= ns;
 
             const auto r = int(255.99 * col[0]);
             const auto g = int(255.99 * col[1]);
