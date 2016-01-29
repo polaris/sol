@@ -4,7 +4,7 @@
 #include <iostream>
 
 bool hitSphere(const Eigen::Vector3f &center, float radius, const sol::Ray &ray) {
-    Eigen::Vector3f oc = ray.getOrigin() - center;
+    const auto oc = ray.getOrigin() - center;
     const auto a = ray.getDirection().dot(ray.getDirection());
     const auto b = 2.0 * oc.dot(ray.getDirection());
     const auto c = oc.dot(oc) - radius * radius;
