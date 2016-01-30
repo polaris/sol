@@ -4,13 +4,28 @@
 #include "HitableList.h"
 #include "Camera.h"
 
+#include <chrono>
 #include <iostream>
-#include <cstdlib>
 
-Eigen::Vector3f color(const sol::Ray &ray, sol::Hitable &hitable) {
+const auto seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+auto realRand = std::bind(std::uniform_real_distribution<double>(0, 1), std::mt19937(seed));
+
+Eigen::Vector3f randomInUnitSphere() {
+    Eigen::Vector3f p;
+    do {
+        p = 2.0 * Eigen::Vector3f(realRand(), realRand(), realRand()) - Eigen::Vector3f(1, 1, 1);
+    } while (p.dot(p) > 1.0);
+    return p;
+}
+
+Eigen::Vector3f color(const sol::Ray &ray, sol::Hitable &hitable, unsigned int curDepth, unsigned int maxDepth) {
+    if (curDepth == maxDepth) {
+        return Eigen::Vector3f(0, 0, 0);
+    }
     sol::HitRecord hitRecord;
     if (hitable.hit(ray, 0.0, std::numeric_limits<float>::max(), hitRecord)) {
-        return 0.5 * Eigen::Vector3f(hitRecord.normal.x() + 1, hitRecord.normal.y() + 1, hitRecord.normal.z() + 1);
+        const auto target = hitRecord.point + hitRecord.normal + randomInUnitSphere();
+        return 0.5 * color(sol::Ray(hitRecord.point, target - hitRecord.point), hitable, curDepth + 1, maxDepth);
     } else {
         const auto unitDirection = ray.getDirection().normalized();
         const auto t = 0.5 * (unitDirection.y() + 1.0);
@@ -18,13 +33,13 @@ Eigen::Vector3f color(const sol::Ray &ray, sol::Hitable &hitable) {
     }
 }
 
-float myRandom() {
-    return drand48();
+Eigen::Vector3f color(const sol::Ray &ray, sol::Hitable &hitable) {
+    return color(ray, hitable, 0, 10);
 }
 
 int main(int, char**) {
-    const int nx = 2000;
-    const int ny = 1000;
+    const int nx = 500;
+    const int ny = 250;
     const int ns = 100;
 
     //const auto aspectRatio = float(nx) / float(ny);
@@ -42,13 +57,15 @@ int main(int, char**) {
             Eigen::Vector3f col(0, 0, 0);
 
             for (int s = 0; s < ns; s++) {
-                const auto u = float(i + myRandom()) / float(nx);
-                const auto v = float(j + myRandom()) / float(ny);
+                const auto u = float(i + realRand()) / float(nx);
+                const auto v = float(j + realRand()) / float(ny);
                 const auto ray = camera.getRay(u, v);
                 col += color(ray, hitableList);
             }
 
             col /= ns;
+
+            col = Eigen::Vector3f(sqrt(col[0]), sqrt(col[1]), sqrt(col[2]));
 
             const auto r = int(255.99 * col[0]);
             const auto g = int(255.99 * col[1]);
