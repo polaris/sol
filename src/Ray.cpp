@@ -12,6 +12,12 @@ Ray::Ray(const Ray &rhs)
 , direction(rhs.direction) {
 }
 
+Ray& Ray::operator =(const Ray &rhs) {
+    this->origin = rhs.origin;
+    this->direction = rhs.direction;
+    return *this;
+}
+
 Eigen::Vector3f Ray::pointAt(float t) const {
     return origin + t * direction;
 }

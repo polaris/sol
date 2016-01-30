@@ -3,6 +3,7 @@
 #include "Sphere.h"
 #include "HitableList.h"
 #include "Camera.h"
+#include "Lambertian.h"
 
 #include <chrono>
 #include <iostream>
@@ -10,7 +11,7 @@
 const auto seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
 auto realRand = std::bind(std::uniform_real_distribution<double>(0, 1), std::mt19937(seed));
 
-Eigen::Vector3f randomInUnitSphere() {
+static Eigen::Vector3f randomInUnitSphere() {
     Eigen::Vector3f p;
     do {
         p = 2.0 * Eigen::Vector3f(realRand(), realRand(), realRand()) - Eigen::Vector3f(1, 1, 1);
@@ -38,8 +39,8 @@ Eigen::Vector3f color(const sol::Ray &ray, sol::Hitable &hitable) {
 }
 
 int main(int, char**) {
-    const int nx = 500;
-    const int ny = 250;
+    const int nx = 400;
+    const int ny = 200;
     const int ns = 100;
 
     //const auto aspectRatio = float(nx) / float(ny);
@@ -49,8 +50,8 @@ int main(int, char**) {
     sol::Camera camera;
 
     sol::HitableList hitableList;
-    hitableList.add(std::make_shared<sol::Sphere>(Eigen::Vector3f(0, 0, -1), 0.5));
-    hitableList.add(std::make_shared<sol::Sphere>(Eigen::Vector3f(0, -100.5, -1), 100));
+    hitableList.add(std::make_shared<sol::Sphere>(Eigen::Vector3f(0, 0, -1), 0.5, std::make_shared<sol::Lambertian>(Eigen::Vector3f(0.8, 0.3, 0.3))));
+    hitableList.add(std::make_shared<sol::Sphere>(Eigen::Vector3f(0, -100.5, -1), 100, std::make_shared<sol::Lambertian>(Eigen::Vector3f(0.8, 0.8, 0.0))));
 
     for (int j = 0; j < ny; j++) {
         for (int i = 0; i < nx; i++) {

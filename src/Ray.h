@@ -11,6 +11,8 @@ public:
 
     Ray(const Ray &rhs);
 
+    Ray& operator =(const Ray &rhs);
+
     const Eigen::Vector3f& getOrigin() const {
         return origin;
     }
@@ -22,8 +24,8 @@ public:
     Eigen::Vector3f pointAt(float t) const;
 
 private:
-    const Eigen::Vector3f origin;
-    const Eigen::Vector3f direction;
+    Eigen::Vector3f origin;
+    Eigen::Vector3f direction;
 };
 
 }

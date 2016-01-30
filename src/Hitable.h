@@ -1,6 +1,7 @@
 #ifndef _Hitable_H
 #define _Hitable_H
 
+#include "Material.h"
 #include <Eigen/Core>
 
 namespace sol {
@@ -11,6 +12,7 @@ struct HitRecord {
     float distance;
     Eigen::Vector3f point;
     Eigen::Vector3f normal;
+    MaterialPtr material;
 };
 
 class Hitable {
