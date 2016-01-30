@@ -11,22 +11,20 @@
 const auto seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
 auto realRand = std::bind(std::uniform_real_distribution<double>(0, 1), std::mt19937(seed));
 
-static Eigen::Vector3f randomInUnitSphere() {
-    Eigen::Vector3f p;
-    do {
-        p = 2.0 * Eigen::Vector3f(realRand(), realRand(), realRand()) - Eigen::Vector3f(1, 1, 1);
-    } while (p.dot(p) > 1.0);
-    return p;
+Eigen::Vector3f operator *(const Eigen::Vector3f &a, const Eigen::Vector3f &b) {
+    return Eigen::Vector3f(a.x() * b.x(), a.y() * b.y(), a.z() * b.z());
 }
 
 Eigen::Vector3f color(const sol::Ray &ray, sol::Hitable &hitable, unsigned int curDepth, unsigned int maxDepth) {
-    if (curDepth == maxDepth) {
-        return Eigen::Vector3f(0, 0, 0);
-    }
     sol::HitRecord hitRecord;
-    if (hitable.hit(ray, 0.0, std::numeric_limits<float>::max(), hitRecord)) {
-        const auto target = hitRecord.point + hitRecord.normal + randomInUnitSphere();
-        return 0.5 * color(sol::Ray(hitRecord.point, target - hitRecord.point), hitable, curDepth + 1, maxDepth);
+    if (hitable.hit(ray, 0.001, std::numeric_limits<float>::max(), hitRecord)) {
+        sol::Ray scattered;
+        Eigen::Vector3f attenuation;
+        if (curDepth < maxDepth && hitRecord.material->scatter(ray, hitRecord, attenuation, scattered)) {
+            return attenuation * color(scattered, hitable, curDepth + 1, maxDepth);
+        } else {
+            return Eigen::Vector3f(0, 0, 0);
+        }
     } else {
         const auto unitDirection = ray.getDirection().normalized();
         const auto t = 0.5 * (unitDirection.y() + 1.0);
@@ -35,7 +33,7 @@ Eigen::Vector3f color(const sol::Ray &ray, sol::Hitable &hitable, unsigned int c
 }
 
 Eigen::Vector3f color(const sol::Ray &ray, sol::Hitable &hitable) {
-    return color(ray, hitable, 0, 10);
+    return color(ray, hitable, 0, 50);
 }
 
 int main(int, char**) {
