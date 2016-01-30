@@ -7,6 +7,8 @@ namespace sol {
 
 class Ray {
 public:
+    Ray() = default;
+
     Ray(const Eigen::Vector3f &origin, const Eigen::Vector3f &direction);
 
     Ray(const Ray &rhs);
