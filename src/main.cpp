@@ -38,8 +38,8 @@ Eigen::Vector3f color(const sol::Ray &ray, sol::Hitable &hitable) {
 }
 
 int main(int, char**) {
-    const int nx = 400;
-    const int ny = 200;
+    const int nx = 800;
+    const int ny = 400;
     const int ns = 100;
 
     //const auto aspectRatio = float(nx) / float(ny);
@@ -51,8 +51,8 @@ int main(int, char**) {
     sol::HitableList hitableList;
     hitableList.add(std::make_shared<sol::Sphere>(Eigen::Vector3f(0, 0, -1), 0.5, std::make_shared<sol::Lambertian>(Eigen::Vector3f(0.8, 0.3, 0.3))));
     hitableList.add(std::make_shared<sol::Sphere>(Eigen::Vector3f(0, -100.5, -1), 100, std::make_shared<sol::Lambertian>(Eigen::Vector3f(0.8, 0.8, 0.0))));
-    hitableList.add(std::make_shared<sol::Sphere>(Eigen::Vector3f(1, 0, -1), 0.5, std::make_shared<sol::Metal>(Eigen::Vector3f(0.8, 0.6, 0.2))));
-    hitableList.add(std::make_shared<sol::Sphere>(Eigen::Vector3f(-1, 0, -1), 0.5, std::make_shared<sol::Metal>(Eigen::Vector3f(0.8, 0.8, 0.8))));
+    hitableList.add(std::make_shared<sol::Sphere>(Eigen::Vector3f(1, 0, -1), 0.5, std::make_shared<sol::Metal>(Eigen::Vector3f(0.8, 0.6, 0.2), 1.0)));
+    hitableList.add(std::make_shared<sol::Sphere>(Eigen::Vector3f(-1, 0, -1), 0.5, std::make_shared<sol::Metal>(Eigen::Vector3f(0.8, 0.8, 0.8), 0.3)));
 
     for (int j = 0; j < ny; j++) {
         for (int i = 0; i < nx; i++) {

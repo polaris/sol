@@ -9,12 +9,13 @@ namespace sol {
 class Metal
 : public Material {
 public:
-    Metal(const Eigen::Vector3f &albedo);
+    Metal(const Eigen::Vector3f &albedo, float fuzziness);
 
     bool scatter(const Ray &inRay, const HitRecord &hitRecord, Eigen::Vector3f &attenuation, Ray &scattered) override;
 
 private:
     const Eigen::Vector3f albedo;
+    const float fuzziness;
 };
 
 }

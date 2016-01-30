@@ -1,11 +1,13 @@
 #include "Metal.h"
 #include "Ray.h"
 #include "Hitable.h"
+#include "Utilities.h"
 
 namespace sol {
 
-Metal::Metal(const Eigen::Vector3f &a)
-: albedo(a) {
+Metal::Metal(const Eigen::Vector3f &a, float f)
+: albedo(a)
+, fuzziness(f) {
 }
 
 static Eigen::Vector3f reflect(const Eigen::Vector3f &v, const Eigen::Vector3f &n) {
@@ -14,7 +16,7 @@ static Eigen::Vector3f reflect(const Eigen::Vector3f &v, const Eigen::Vector3f &
 
 bool Metal::scatter(const Ray &inRay, const HitRecord &hitRecord, Eigen::Vector3f &attenuation, Ray &scattered) {
     const auto reflected = reflect(inRay.getDirection(), hitRecord.normal);
-    scattered = Ray(hitRecord.point, reflected);
+    scattered = Ray(hitRecord.point, reflected + fuzziness * randomInUnitSphere());
     attenuation = albedo;
     return scattered.getDirection().dot(hitRecord.normal) > 0;
 }
