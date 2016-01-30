@@ -10,4 +10,20 @@ Eigen::Vector3f randomInUnitSphere() {
     return p;
 }
 
+Eigen::Vector3f reflect(const Eigen::Vector3f &v, const Eigen::Vector3f &n) {
+    return v - 2 * v.dot(n) * n;
+}
+
+bool refract(const Eigen::Vector3f &v, const Eigen::Vector3f &n, float niOverNt, Eigen::Vector3f &refracted) {
+    const auto uv = v.normalized();
+    const auto dt = uv.dot(n);
+    const auto discriminant = 1.0 - niOverNt * niOverNt * (1 - dt * dt);
+    if (discriminant > 0) {
+        refracted = niOverNt * (v - n * dt) - n * sqrt(discriminant);
+        return true;
+    } else {
+        return false;
+    }
+}
+
 }
