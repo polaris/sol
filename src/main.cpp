@@ -47,7 +47,12 @@ int main(int, char**) {
 
     sol::Image image(nx, ny);
 
-    sol::Camera camera;
+    Eigen::Vector3f lookfrom(3, 3, 3);
+    Eigen::Vector3f lookat(0, 0, -1);
+    float distToFocus = (lookfrom - lookat).norm();
+    float aperture = 0.1;
+
+    sol::Camera camera(lookfrom, lookat, Eigen::Vector3f(0, 1, 0), 20, float(nx)/float(ny), aperture, distToFocus);
 
     sol::HitableList hitableList;
     hitableList.add(std::make_shared<sol::Sphere>(Eigen::Vector3f(0, 0, -1), 0.5, std::make_shared<sol::Lambertian>(Eigen::Vector3f(0.1, 0.2, 0.5))));

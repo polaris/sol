@@ -8,15 +8,17 @@ namespace sol {
 
 class Camera {
 public:
-    Camera();
+    Camera(const Eigen::Vector3f &origin, const Eigen::Vector3f &lookat, const Eigen::Vector3f &up, float fov, float aspect, float aperture, float focusDist);
 
     Ray getRay(float u, float v) const;
 
 private:
-    const Eigen::Vector3f origin;
-    const Eigen::Vector3f lowerLeftCorner;
-    const Eigen::Vector3f horizontal;
-    const Eigen::Vector3f vertical;
+    Eigen::Vector3f origin;
+    Eigen::Vector3f lowerLeftCorner;
+    Eigen::Vector3f horizontal;
+    Eigen::Vector3f vertical;
+    Eigen::Vector3f u, v, w;
+    float lensRadius;
 };
 
 }
