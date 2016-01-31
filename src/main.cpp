@@ -53,7 +53,8 @@ int main(int, char**) {
     hitableList.add(std::make_shared<sol::Sphere>(Eigen::Vector3f(0, 0, -1), 0.5, std::make_shared<sol::Lambertian>(Eigen::Vector3f(0.1, 0.2, 0.5))));
     hitableList.add(std::make_shared<sol::Sphere>(Eigen::Vector3f(0, -100.5, -1), 100, std::make_shared<sol::Lambertian>(Eigen::Vector3f(0.8, 0.8, 0.0))));
     hitableList.add(std::make_shared<sol::Sphere>(Eigen::Vector3f(1, 0, -1), 0.5, std::make_shared<sol::Metal>(Eigen::Vector3f(0.8, 0.6, 0.2), 0.0)));
-    hitableList.add(std::make_shared<sol::Sphere>(Eigen::Vector3f(-1, 0, -1), 0.5, std::make_shared<sol::Dielectric>(1.5)));
+    hitableList.add(std::make_shared<sol::Sphere>(Eigen::Vector3f(-1, 0, -1),  0.5,  std::make_shared<sol::Dielectric>(1.5)));
+    hitableList.add(std::make_shared<sol::Sphere>(Eigen::Vector3f(-1, 0, -1), 0.49, std::make_shared<sol::Dielectric>(1.5), true));
 
     for (int j = 0; j < ny; j++) {
         for (int i = 0; i < nx; i++) {
