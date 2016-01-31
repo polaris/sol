@@ -15,19 +15,32 @@ bool Dielectric::scatter(const Ray &inRay, const HitRecord &hitRecord, Eigen::Ve
     float niOverNt = 0.0;
     attenuation = Eigen::Vector3f(1.0, 1.0, 1.0);
     Eigen::Vector3f refracted;
+    float reflectProb = 0.0;
+    float cosine = 0.0;
+
     if (inRay.getDirection().dot(hitRecord.normal) > 0) {
         outwardNormal = -hitRecord.normal;
         niOverNt = refractionIndex;
+        cosine = refractionIndex * inRay.getDirection().dot(hitRecord.normal) / inRay.getDirection().norm();
     } else {
         outwardNormal = hitRecord.normal;
         niOverNt = 1.0 / refractionIndex;
+        cosine = -inRay.getDirection().dot(hitRecord.normal) / inRay.getDirection().norm();
     }
+
     if (refract(inRay.getDirection(), outwardNormal, niOverNt, refracted)) {
-        scattered = Ray(hitRecord.point, refracted);
+        reflectProb = schlick(cosine, refractionIndex);
     } else {
         scattered = Ray(hitRecord.point, reflected);
-        return false;
+        reflectProb = 1.0;
     }
+
+    if (drand48() < reflectProb) {
+        scattered = Ray(hitRecord.point, reflected);
+    } else {
+        scattered = Ray(hitRecord.point, refracted);
+    }
+
     return true;
 }
 
