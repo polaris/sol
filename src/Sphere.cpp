@@ -3,10 +3,11 @@
 
 namespace sol {
 
-Sphere::Sphere(const Eigen::Vector3f &c, float r, MaterialPtr m) 
+Sphere::Sphere(const Eigen::Vector3f &c, float r, MaterialPtr m, bool ni/* = false*/) 
 : center(c)
 , radius(r)
-, material(m) {
+, material(m)
+, normalsInward(ni) {
 }
 
 bool Sphere::hit(const Ray &ray, float tmin, float tmax, HitRecord &hitRecord) {
@@ -21,6 +22,9 @@ bool Sphere::hit(const Ray &ray, float tmin, float tmax, HitRecord &hitRecord) {
             hitRecord.distance = temp;
             hitRecord.point = ray.pointAt(hitRecord.distance);
             hitRecord.normal = (hitRecord.point - center).normalized();
+            if (normalsInward) {
+                hitRecord.normal = -hitRecord.normal;
+            }
             hitRecord.material = material;
             return true;
         }
@@ -29,6 +33,9 @@ bool Sphere::hit(const Ray &ray, float tmin, float tmax, HitRecord &hitRecord) {
             hitRecord.distance = temp;
             hitRecord.point = ray.pointAt(hitRecord.distance);
             hitRecord.normal = (hitRecord.point - center).normalized();
+            if (normalsInward) {
+                hitRecord.normal = -hitRecord.normal;
+            }
             hitRecord.material = material;
             return true;
         }

@@ -11,7 +11,7 @@ namespace sol {
 class Sphere
 : public Hitable {
 public:
-    Sphere(const Eigen::Vector3f &center, float radius, MaterialPtr material);
+    Sphere(const Eigen::Vector3f &center, float radius, MaterialPtr material, bool normalsInward = false);
 
     bool hit(const Ray &ray, float tmin, float tmax, HitRecord &hitRecord) override;
 
@@ -19,6 +19,7 @@ private:
     const Eigen::Vector3f &center;
     const float radius;
     MaterialPtr material;
+    const bool normalsInward;
 };
 
 }
