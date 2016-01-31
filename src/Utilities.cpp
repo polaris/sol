@@ -26,4 +26,10 @@ bool refract(const Eigen::Vector3f &v, const Eigen::Vector3f &n, float niOverNt,
     }
 }
 
+float schlick(float cosine, float refractionIndex) {
+    auto r0 = (1 - refractionIndex) / (1 + refractionIndex);
+    r0 = r0 * r0;
+    return r0 + (1 - r0) * pow(1 - cosine, 5);
+}
+
 }
