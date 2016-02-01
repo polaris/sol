@@ -1,2 +1,2 @@
 # sol
-A ray-tracer in C++
+A ray-tracer in Modern C++
